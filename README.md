@@ -9,3 +9,5 @@ Games include:
 * Memory Game
 * Blackjack
 * Ricerocks (asteroids type game)
+
+All games can be ran using [Codeskulptor](http://www.codeskulptor.org/).
