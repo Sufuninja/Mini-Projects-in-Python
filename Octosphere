@@ -1,0 +1,81 @@
+
+# THE MYSTICAL OCTOSPHERE!
+
+
+import simplegui
+import random
+
+#message = ""
+
+def number_to_fortune(num):
+    if num == 0:
+        return "Yes, for sure!" 
+    
+    elif num == 1:
+        return "Probably yes..."
+    
+    elif num == 2:
+        return "Seems like yes..."
+    
+    elif num == 3:
+        return "Definitely not!"
+    
+    elif num == 4:
+        return "Probably not"
+    
+    elif num == 5:
+        return "I really doubt it..."
+    
+    elif num == 6:
+        return "Not sure, check back later!"
+    
+    elif num == 7:
+        return "I really can't tell"
+    
+    else:
+        return "I'm a doctor Jim, not a computer scientist!"
+        
+        
+
+def mystical_octosphere(question):
+    # Fill in your code below
+    num = random.randrange(0,7)
+
+    answer_fortune = number_to_fortune(num)
+   # global message
+   # message = answer_fortune
+   # draw_handler(canvas)
+    
+    print "Your question was..." + str(question)
+    
+    print "You shake the mystical Octosphere..."
+    
+    print "The cloudy liquid swirls and a reply comes into view..."
+    
+    print "The mystical Octosphere says..." + answer_fortune + "\n"
+
+def question_asked(s):
+    global question
+    question = (s)
+    mystical_octosphere(question)
+    
+#def draw_handler(canvas):
+#    canvas.draw_text(message, (20, 20), 12, "blue")
+    
+
+#def clear():
+    
+#Create Frame
+frame = simplegui.create_frame("Octosphere", 200, 200)
+frame.set_canvas_background("black")
+#frame.set_draw_handler(draw_handler)
+
+#frame.set_draw_handler(draw_handler)
+
+#Create button to clear
+#frame.add_button("Clear", clear, 100)
+#Create input handler
+frame.add_input("Ask a yes or no question", question_asked, 200)
+frame.start()
+#mystical_octosphere("Will I get rich?")
+#mystical_octosphere("Are the Cubs going to win the World Series?")
