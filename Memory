@@ -1,0 +1,146 @@
+###########################################################
+# This was hard. My list were gigantic before I decided   #
+# that maybe I don't understand iterations like I thought #
+# I did. I thougt I could get by with just making huge    #
+# list and dictionaries but it just became more and more  #
+# complicated. After hours in the forums and even more    #
+# on YouTube I produced something that works.(as far as I #
+# can tell) I hope nothing crashes. Enjoy!                #
+#         ¸.·´¯`·.´¯`·.¸¸.·´¯`·.¸><(((º>                  #
+###########################################################
+
+# implementation of card game - Memory
+
+import simplegui
+import random
+
+WIDTH = 800
+HEIGHT = 100
+LIST1 = range(0,8)
+LIST2 = range(0,8)
+PAIRS = LIST1 + LIST2
+new_list = []
+
+# card width
+CRD_WDTH = WIDTH / 16
+# line thickness for cards
+LN_THIK = 2
+# font color
+FONT_COLR = "Black"
+# color for linesMouse: Click 697, 34Key:Reset
+
+LN_COLR = "Black"
+# fill color for cards
+fill = "Green"
+flipped = "White"
+# font size for card numbers
+FONT_SIZE = 50
+# x and y for drawing numbers
+center = [12, HEIGHT / 2 + FONT_SIZE / 2 -5]
+# first verticle line
+x = LN_THIK / 2
+# last verticle line
+x16 = WIDTH - LN_THIK / 2
+# top line
+y = LN_THIK / 2
+# bottom line
+y1 = HEIGHT - LN_THIK / 2
+
+
+# helper function to initialize globals
+def new_game():
+    global new_list, is_exposed, PAIRS, state, card1, card2, turns
+
+    random.shuffle(PAIRS)
+    #pair = False
+    new_list = PAIRS
+    is_exposed = [False, False, False, False, False, False, False, False, False, False, 
+              False, False, False, False, False, False]
+    state = 0 
+    turns = 0
+    card1 = -1
+    card2 = -1
+     
+# define event handlers
+def mouseclick(pos):
+    # add game state logic here
+    global state, turns, card1, card2, pair 
+    # thank you Ivan in the forums!
+    index = list(pos)[0]//50
+    
+    # start with no cards fliped
+    if is_exposed[index] == False:
+        if state == 0: 
+            card1 = index
+            is_exposed[index] = True
+            state = 1
+        # one card fliped    
+        elif state == 1: 
+            card2 = index
+            is_exposed[index] = True
+            state = 2
+            turns += 1
+            label.set_text("Turns = " + str(turns))
+        # nest card fliped, previous two are fliped back over and just one
+        # is exposed
+        else: 
+            if new_list[card1] != new_list[card2]:
+                is_exposed[card1] = False
+                is_exposed[card2] = False
+                card1 = -1 
+                card2 = -1
+            card1 = index
+            is_exposed[index] = True
+            state = 1  
+   
+    
+                        
+# cards are logically 50x100 pixels in size    
+def draw(canvas):
+    ### here are some loops I didn't want to use for some reason. I'm just stubborn :) 
+    for card in range(16):
+        if is_exposed[card]:
+            canvas.draw_polygon([[card*50, 0], [(card+1)*50, 0], [(card+1)*50, 100], [card*50, 100]], LN_THIK, "Black", "Ghostwhite")
+            canvas.draw_text(str(new_list[card]), (card*50+11, 69), 55, "Goldenrod", "monospace")
+        else:
+            canvas.draw_polygon([[card*50, 0], [(card+1)*50, 0], [(card+1)*50, 100], [card*50, 100]], LN_THIK, "Black", "Cadetblue")
+    label.set_text("Turns = " + str(turns))    
+            
+
+# create frame and add a button and labels
+frame = simplegui.create_frame("Memory", WIDTH, HEIGHT)
+frame.add_button("Reset", new_game)
+label = frame.add_label("Turns = 0")
+
+# register event handlers
+frame.set_mouseclick_handler(mouseclick)
+frame.set_draw_handler(draw)
+music = simplegui.load_sound("http://commondatastorage.googleapis.com/codeskulptor-assets/Epoq-Lepidoptera.ogg")
+music.set_volume(0.1)
+# get things rolling
+new_game()
+frame.start()
+music.play()
+#test()
+########################################################################################################################
+#  Always remember to review the grading rubric	#																	   #
+#Grading Rubric - 11 pts total (scaled to 100)                                                                         #
+#                                                                                                                      #
+#1 pt - The game correctly draws 16 cards on the canvas (horizontally or as a grid). Using images in place of textual  #
+#       numbers is fine. However, it is the submitter's responsibility to ensure that custom images load during peer   #
+#       assessment.                                                                                                    #
+#1 pt - The cards appear in eight unique pairs.                                                                        #
+#1 pt - The game ignores clicks on exposed cards.                                                                      #
+#1 pt - At the start of the game, a click on a card exposes the card that was clicked on.                              #
+#1 pt - If one upaired card is exposed, a click on a second unexposed card exposes the card that was clicked on.       #
+#1 pt - If two unpaired cards are exposed, a click on an unexposed card exposes the card that was clicked on and       #
+#       flips the two unpaired cards over.                                                                             #
+#1 pt - If all exposed cards are paired, a click on an unexposed card exposes the card that was clicked on and does    #
+#       not flip any other cards.                                                                                      #
+#1 pt - Cards paired by two clicks in the same turn remain exposed until the start of the next game.                   #
+#1 pt - The game correctly updates and displays the number of turns in the current game in a label displayed in the    #
+#       control area. The counter may be incremented after either the first or second card is flipped during a turn.   #
+#1 pt - The game includes a "Reset" button that resets the turn counter and restarts the game.                         #
+#1 pt - The deck is also randomly shuffled each time the "Reset" button is pressed, so that the cards are in a         #
+#       different order each game.                                                                                     #
+########################################################################################################################
